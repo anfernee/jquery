@@ -11,25 +11,32 @@ var rclass = /[\n\t\r]/g,
 	formHook, boolHook;
 
 jQuery.fn.extend({
+  //AF: get value of attribute, see prop
 	attr: function( name, value ) {
 		return jQuery.access( this, name, value, true, jQuery.attr );
 	},
 
+  //AF: trivial
 	removeAttr: function( name ) {
 		return this.each(function() {
 			jQuery.removeAttr( this, name );
 		});
 	},
 	
+  //AF: get value of a property, see attr
+  //    $('#id').prop('checked') === true
+  //    $('#id').attr('checked') === 'checked'
 	prop: function( name, value ) {
 		return jQuery.access( this, name, value, true, jQuery.prop );
 	},
 	
+  //AF: cannot remove checked, disabled, selected. once removed, cannot add anymore
 	removeProp: function( name ) {
 		name = jQuery.propFix[ name ] || name;
 		return this.each(function() {
 			// try/catch handles cases where IE balks (such as removing a property on window)
 			try {
+        //AF: set as undefined, then delete
 				this[ name ] = undefined;
 				delete this[ name ];
 			} catch( e ) {}
@@ -37,8 +44,11 @@ jQuery.fn.extend({
 	},
 
 	addClass: function( value ) {
+    //AF: It is a callback.
 		if ( jQuery.isFunction( value ) ) {
 			return this.each(function(i) {
+        //AF: this is not jquery?
+        //    it leads to a question: what is jquery per se?
 				var self = jQuery(this);
 				self.addClass( value.call(this, i, self.attr("class") || "") );
 			});
@@ -50,11 +60,16 @@ jQuery.fn.extend({
 			for ( var i = 0, l = this.length; i < l; i++ ) {
 				var elem = this[i];
 
+        //AF: I remember nodeType is javascript internal ds.
+        //    node type is element for nodeType === 1
+        //    Why not use meaningful macro/constant for this, other than magic number?
 				if ( elem.nodeType === 1 ) {
+          //AF: the first class name
 					if ( !elem.className ) {
 						elem.className = value;
 
 					} else {
+            //AF: not the first class name, do appending.
 						var className = " " + elem.className + " ",
 							setClass = elem.className;
 
@@ -72,6 +87,7 @@ jQuery.fn.extend({
 		return this;
 	},
 
+  //AF: The same as addClass
 	removeClass: function( value ) {
 		if ( jQuery.isFunction(value) ) {
 			return this.each(function(i) {
@@ -124,6 +140,7 @@ jQuery.fn.extend({
 					state = stateVal,
 					classNames = value.split( rspace );
 
+        //AF: NICE code! trick for looping array
 				while ( (className = classNames[ i++ ]) ) {
 					// check each className given, space seperated list
 					state = isBool ? state : !self.hasClass( className );
@@ -153,6 +170,7 @@ jQuery.fn.extend({
 		return false;
 	},
 
+  //AF: get value of an element
 	val: function( value ) {
 		var hooks, ret,
 			elem = this[0];
