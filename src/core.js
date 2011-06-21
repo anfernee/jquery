@@ -321,6 +321,10 @@ jQuery.extend = jQuery.fn.extend = function() {
 		target = {};
 	}
 
+  //AF: about this
+  //    if $.extend(), this == jQuery
+  //    if $().extend(), this == jquery object.
+  //
 	// extend jQuery itself if only one argument is passed
 	if ( length === i ) {
 		target = this;
@@ -478,17 +482,23 @@ jQuery.extend({
 	},
 
 	// A crude way of determining if an object is a window
+  //AF: yes, it is *CRUDE*
 	isWindow: function( obj ) {
 		return obj && typeof obj === "object" && "setInterval" in obj;
 	},
 
+  //AF: modifies the standard isNaN
+  //    isNaN(null) == false
+  //    $.isNaN(null) == true
 	isNaN: function( obj ) {
 		return obj == null || !rdigit.test( obj ) || isNaN( obj );
 	},
 
+  //AF: I think the the toString.call part is tricky...
+  //    toString.call(obj) is Object.prototype.toString(obj)
 	type: function( obj ) {
 		return obj == null ?
-			String( obj ) :
+			String( obj ) :   //AF: if obj is undefined or null, then it returns null
 			class2type[ toString.call(obj) ] || "object";
 	},
 
@@ -576,6 +586,7 @@ jQuery.extend({
 
 	noop: function() {},
 
+  //AF: eval() and globalEval().
 	// Evaluates a script in a global context
 	// Workarounds based on findings by Jim Driscoll
 	// http://weblogs.java.net/blog/driscoll/archive/2009/09/08/eval-javascript-global-context

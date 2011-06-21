@@ -33,6 +33,7 @@ jQuery.fn.extend({
 		var ret = this.pushStack( "", "find", selector ),
 			length, n, r;
 
+    //AF: use l, instead of this.length
 		for ( i = 0, l = this.length; i < l; i++ ) {
 			length = ret.length;
 			jQuery.find( selector, this[i], ret );
@@ -64,7 +65,7 @@ jQuery.fn.extend({
 		});
 	},
 
-	not: function( selector ) {
+  not: function( selector ) {
 		return this.pushStack( winnow(this, selector, false), "not", selector);
 	},
 
