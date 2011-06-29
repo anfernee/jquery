@@ -11,7 +11,13 @@ var rclass = /[\n\t\r]/g,
 	formHook, boolHook;
 
 jQuery.fn.extend({
-  //AF: get value of attribute, see prop
+  //AF: get/set value of attribute, see prop
+  //    get: $("#id").attr('src')
+  //    set: $("#id").attr('src', 'http')
+  //         $("#id").attr({ src: 'http' })
+  //         $("#id").attr('src', function(i, val){ return val + '/a.jpg' })
+  //
+  //         $("#id").attr("disabled", "disabled")
 	attr: function( name, value ) {
 		return jQuery.access( this, name, value, true, jQuery.attr );
 	},
@@ -43,6 +49,7 @@ jQuery.fn.extend({
 		});
 	},
 
+  //AF: parameter value could be a class name, or a function
 	addClass: function( value ) {
     //AF: It is a callback.
 		if ( jQuery.isFunction( value ) ) {
@@ -127,6 +134,7 @@ jQuery.fn.extend({
 		if ( jQuery.isFunction( value ) ) {
 			return this.each(function(i) {
 				var self = jQuery(this);
+        //AF: I believe this is a doc bug, document said function(index, class), but it should be function(index, class, switch)
 				self.toggleClass( value.call(this, i, self.attr("class"), stateVal), stateVal );
 			});
 		}
@@ -314,6 +322,8 @@ jQuery.extend({
 		tabindex: "tabIndex"
 	},
 	
+  //AF: jQuery.attr
+  //    if getAttribute is not supported, then use jQuery.prop
 	attr: function( elem, name, value, pass ) {
 		var nType = elem.nodeType;
 		

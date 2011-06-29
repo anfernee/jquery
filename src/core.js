@@ -804,10 +804,14 @@ jQuery.extend({
 
 	// Mutifunctional method to get and set values to a collection
 	// The value/s can be optionally by executed if its a function
+  //AF: jQuery.access is simple and beautiful
+  //    example: jQuery.access(this, name, value, true, jQuery.attr)
+  //             jQuery.access(this, name, value, true, jQuery.prop)
 	access: function( elems, key, value, exec, fn, pass ) {
 		var length = elems.length;
 
 		// Setting many attributes
+    //AF: map    $("#id").attr({ src: 'http' })
 		if ( typeof key === "object" ) {
 			for ( var k in key ) {
 				jQuery.access( elems, k, key[k], exec, fn, value );
