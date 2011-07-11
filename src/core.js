@@ -372,9 +372,11 @@ jQuery.extend = jQuery.fn.extend = function() {
 jQuery.extend({
 	noConflict: function( deep ) {
 		if ( window.$ === jQuery ) {
+      //AF: use original window.$
 			window.$ = _$;
 		}
 
+    //AF: same as above, deep default as undefined (false)
 		if ( deep && window.jQuery === jQuery ) {
 			window.jQuery = _jQuery;
 		}
@@ -401,8 +403,11 @@ jQuery.extend({
 	// Handle when the DOM is ready
 	ready: function( wait ) {
 		// Either a released hold or an DOMready/load event and not yet ready
+    //AF: wait === true  means    Release one readyWait, called by holdReady.
+    //    wait !== true  means    Called by anyone else.
 		if ( (wait === true && !--jQuery.readyWait) || (wait !== true && !jQuery.isReady) ) {
 			// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
+      //AF: Trust document.body, instead of domready event.
 			if ( !document.body ) {
 				return setTimeout( jQuery.ready, 1 );
 			}
@@ -526,6 +531,7 @@ jQuery.extend({
 		return key === undefined || hasOwn.call( obj, key );
 	},
 
+  //AF: simple
 	isEmptyObject: function( obj ) {
 		for ( var name in obj ) {
 			return false;
@@ -584,6 +590,7 @@ jQuery.extend({
 		return xml;
 	},
 
+  //AF: do nothing
 	noop: function() {},
 
   //AF: eval() and globalEval().
