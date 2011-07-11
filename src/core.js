@@ -44,6 +44,7 @@ var jQuery = function( selector, context ) {
 	rmsie = /(msie) ([\w.]+)/,
 	rmozilla = /(mozilla)(?:.*? rv:([\w.]+))?/,
 
+  //
 	// Matches dashed string for camelizing
 	rdashAlpha = /-([a-z])/ig,
 
@@ -201,6 +202,11 @@ jQuery.fn = jQuery.prototype = {
 		return this.length;
 	},
 
+  //AF: this slice isn't the Array.prototype.slice
+  //    this slice is the slice in jQuery.prototype namespace!
+  //
+  //    Array.prototype.slice will turn the object into an array!
+  //    it's tricky, But you can get it thru jQuery.fn.slice down there.
 	toArray: function() {
 		return slice.call( this, 0 );
 	},
@@ -208,12 +214,16 @@ jQuery.fn = jQuery.prototype = {
 	// Get the Nth element in the matched element set OR
 	// Get the whole matched element set as a clean array
 	get: function( num ) {
+    //AF: num == null  means get() or get(null)
+    //    because undefined == null is true
+    //            null == null is true
 		return num == null ?
 
 			// Return a 'clean' array
 			this.toArray() :
 
 			// Return just the object
+      //AF: I like this trick, no need to loop... ? : is good.
 			( num < 0 ? this[ this.length + num ] : this[ num ] );
 	},
 
@@ -221,18 +231,29 @@ jQuery.fn = jQuery.prototype = {
 	// (returning the new matched element set)
 	pushStack: function( elems, name, selector ) {
 		// Build a new jQuery matched element set
+    //AF: construct another jquery object, but with no arguments
 		var ret = this.constructor();
 
 		if ( jQuery.isArray( elems ) ) {
 			push.apply( ret, elems );
+      //AF:  ret.push(elems[0], elems[1], ...)
+      //     push is like array operation
 
 		} else {
+      //AF: merge 2 arrays into first array
+      //    Ask: why not push them in? when elems is not array?
+      //    Answer: because jqeury object acts like an array, but is not an array.
+      //            $('div') is not array. slice.apply($('div'), [2,3]) is an array.
 			jQuery.merge( ret, elems );
 		}
 
 		// Add the old object onto the stack (as a reference)
 		ret.prevObject = this;
 
+    //AF: ?? what is context?
+    //Document: Description: The DOM node context originally passed to jQuery(); if none was passed then context will likely be the document.
+    //
+    //     Keep the context of original one
 		ret.context = this.context;
 
 		if ( name === "find" ) {
@@ -248,6 +269,7 @@ jQuery.fn = jQuery.prototype = {
 	// Execute a callback for every element in the matched set.
 	// (You can seed the arguments with an array of args, but this is
 	// only used internally.)
+  // AF: args are good. why not open it?
 	each: function( callback, args ) {
 		return jQuery.each( this, callback, args );
 	},
@@ -262,9 +284,19 @@ jQuery.fn = jQuery.prototype = {
 		return this;
 	},
 
+  //AF: get and eq?
+  //
+  //My understanding:
+  //    eq is still a jquery object
+  //    but get is just an array.
+  //    I could be wrong...
 	eq: function( i ) {
+    //AF:  [1,2,3,4].slice(-1) is [4]
+    // but [1,2,3,4].slice(-1,0) is []
+    // so  -1 is treated differently.
 		return i === -1 ?
 			this.slice( i ) :
+      //AF: +i + 1, why +i?
 			this.slice( i, +i + 1 );
 	},
 
@@ -276,11 +308,21 @@ jQuery.fn = jQuery.prototype = {
 		return this.eq( -1 );
 	},
 
+  //AF: Inside the function, slice === Array.prototype.slice
+  //    $('div') is like an array.
+  //    $('div')[0], $('div')[1], $('div').length, etc...
+  //
+  //    second slice.call(arguments).join(',') could be simplified as arguments.join(',')
+  //
+  //    this.pushStack(elements,                   "slice",                    "1,2");
+  //                   sliced elements from array, method generate the array,  arguments
+  //    this is the original jquery object.
 	slice: function() {
 		return this.pushStack( slice.apply( this, arguments ),
 			"slice", slice.call(arguments).join(",") );
 	},
 
+  //TODO anfernee inspect .map and jQuery.map
 	map: function( callback ) {
 		return this.pushStack( jQuery.map(this, function( elem, i ) {
 			return callback.call( elem, i, elem );
@@ -619,6 +661,10 @@ jQuery.extend({
 	},
 
 	// args is for internal usage only
+  //AF: so what args for?
+  // Following comment is from jQuery.fn.each
+	// (You can seed the arguments with an array of args, but this is
+	// only used internally.)
 	each: function( object, callback, args ) {
 		var name, i = 0,
 			length = object.length,
@@ -710,6 +756,7 @@ jQuery.extend({
 		return -1;
 	},
 
+  //AF: merge the second into the first
 	merge: function( first, second ) {
 		var i = first.length,
 			j = 0;
