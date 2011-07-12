@@ -794,6 +794,7 @@ jQuery.extend({
 	},
 
 	// arg is for internal usage only
+  //AF: translate all items in an array or object to new array of items
 	map: function( elems, callback, arg ) {
 		var value, key, ret = [],
 			i = 0,

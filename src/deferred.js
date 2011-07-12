@@ -28,14 +28,19 @@ jQuery.extend({
 							elem,
 							type,
 							_fired;
+            //AF: this fired, _fired is to solve the issue that
+            //    when calling done(), resolving is already called,
+            //    it makes sure the newly added callbacks get called
 						if ( fired ) {
 							_fired = fired;
 							fired = 0;
 						}
+            // Add in callbacks
 						for ( i = 0, length = args.length; i < length; i++ ) {
 							elem = args[ i ];
 							type = jQuery.type( elem );
 							if ( type === "array" ) {
+                //AF: recursively add functions in callbacks
 								deferred.done.apply( deferred, elem );
 							} else if ( type === "function" ) {
 								callbacks.push( elem );
@@ -55,6 +60,7 @@ jQuery.extend({
 						args = args || [];
 						firing = 1;
 						try {
+              //AF: iterate all callbacks in array
 							while( callbacks[ 0 ] ) {
 								callbacks.shift().apply( context, args );
 							}
@@ -75,6 +81,8 @@ jQuery.extend({
 
 				// Has this deferred been resolved?
 				isResolved: function() {
+          //AF: good trick !!null and !!undefined are all false
+          //    ensures return is true|false
 					return !!( firing || fired );
 				},
 
