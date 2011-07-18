@@ -15,6 +15,7 @@
  */
 (function( window, undefined ) {
 
+//AF: header of jquery.js
 // Use the correct document accordingly with window argument (sandbox)
 var document = window.document,
 	navigator = window.navigator,
